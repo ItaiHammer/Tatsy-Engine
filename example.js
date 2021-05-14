@@ -72,13 +72,6 @@ function startGame() {
     });
   }
 
-  scene.drawRect({
-    name: 'kak',
-    position: { x: 100, y: 100 },
-    size: { x: 100, y: 100 },
-    color: 'red',
-  });
-
   scene.startAnimation(60);
 }
 
