@@ -1,26 +1,30 @@
 {
-  "name": "tatsy-engine",
-  "version": "1.0.0",
-  "description": "",
-  "main": "game.js",
-  "type": "module",
-  "scripts": {
-    "start": "node .",
-    "dev": "parcel example.html",
-    "build": "parcel build example.html",
-    "git-build": "rmdir /S docs && npm run build && rename dist docs && git add ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ItaiHammer/Tatsy-Engine.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ItaiHammer/Tatsy-Engine/issues"
-  },
-  "homepage": ".",
-  "dependencies": {
-    "parcel-bundler": "^1.12.5"
-  }
+    "name": "tatsy-engine",
+    "version": "1.0.0",
+    "description": "",
+    "main": "game.js",
+    "type": "module",
+    "scripts": {
+        "start": "node .",
+        "dev": "parcel example.html",
+        "build": "parcel build example.html",
+        "git-build": "rmdir /S docs && npm run build && rename dist docs && git add ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ItaiHammer/Tatsy-Engine.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ItaiHammer/Tatsy-Engine/issues"
+    },
+    "homepage": ".",
+    "dependencies": {
+        "parcel-bundler": "^1.12.5"
+    },
+    "devDependencies": {
+        "postcss": "^8.2.15",
+        "autoprefixer": "^10.2.5"
+    }
 }
