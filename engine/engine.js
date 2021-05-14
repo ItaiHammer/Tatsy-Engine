@@ -123,6 +123,11 @@ let scene = {
             );
         };
 
+        //physics functions
+        scene.checkForCollision = (obj1, obj2) => {};
+
+        scene.setGravity = (x, speed, colisionCords) => {};
+
         //animation functions
         scene.setAnimation = (animation, frameRate) => {
             setInterval(() => {
