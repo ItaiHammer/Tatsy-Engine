@@ -21,15 +21,14 @@ let scene = {
     //drawing functions
     //drawing rectangle
     scene.drawRect = (data) => {
-      const color = handleColor(data.color);
-
       function Rect(name, positionX, positionY, sizeX, sizeY, color, update) {
         this.name = name;
         this.position = { x: positionX, y: positionY };
         this.size = { x: sizeX, y: sizeY };
-        this.color = color;
+        this.color = handleColor(data.color);
 
         context.fillStyle = this.color;
+
         this.draw = () => {
           context.fillRect(
             this.position.x,
@@ -54,7 +53,7 @@ let scene = {
           data.position.y,
           data.size.x,
           data.size.y,
-          color,
+          data.color,
           data.update
         )
       );

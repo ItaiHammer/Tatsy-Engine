@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+canvas {
+  border: 1px solid black;
+}
+
+
+/*# sourceMappingURL=/example.fac07fa6.css.map */

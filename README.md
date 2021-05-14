@@ -4,9 +4,12 @@
 
 - **Vars:**
 
-  - **`scene.canvas`** - Refrence to the canvas element the scene is working on
+  - **`scene.canvas <Html Element>`** - Refrence to the canvas element the scene is working on
+
     - `width` - Returns the width of the canvas
     - `height` - Returns the height of the canvas
+
+  - **`scene.elements <Array>`** - An Array filled with all of the elements on the scene
 
 - **Functions:**
 
