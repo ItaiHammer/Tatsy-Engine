@@ -127,13 +127,25 @@ exports.default = void 0;
 var scene = {
   canvas: document.createElement('canvas'),
   elements: [],
+  math: {
+    randomIntFromRange: function randomIntFromRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+  },
+  physics: {},
   clear: function clear() {
     scene.context.clearRect(0, 0, scene.canvas.width, scene.canvas.height);
   },
   start: function start(data) {
     //setting up canvas
-    scene.canvas.width = data.width;
-    scene.canvas.height = data.height;
+    if (data.width != null) {
+      scene.canvas.width = data.width;
+    }
+
+    if (data.height != null) {
+      scene.canvas.height = data.height;
+    }
+
     scene.context = scene.canvas.getContext('2d');
     var context = scene.context; //handling functions
 
@@ -295,44 +307,74 @@ var scene = {
 };
 var _default = scene;
 exports.default = _default;
-},{}],"kak.js":[function(require,module,exports) {
+},{}],"animation2.js":[function(require,module,exports) {
 "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = animation2;
 
 var _engine = _interopRequireDefault(require("./engine/engine.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-window.onload = function () {
+function animation2() {
   _engine.default.start({
     sceneParent: document.body,
-    width: 500,
-    height: 500
+    width: innerWidth,
+    height: innerHeight
   });
 
-  var vx = 5;
+  var colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92']; // const ballCount = Math.floor(innerWidth / 5);
 
-  _engine.default.drawRect({
-    position: {
-      x: 100,
-      y: _engine.default.canvas.width / 2 - 50
-    },
-    size: {
-      x: 100,
-      y: 100
-    },
-    color: 'brown',
-    update: function update(element) {
-      if (element.position.x + element.size.x > _engine.default.canvas.width || element.position.x < 0) {
-        vx = -vx;
+  var ballCount = 0;
+
+  var _loop = function _loop(i) {
+    var vy = 1;
+    var vx = (Math.random() - 0.5) * 10;
+    var gravity = 1;
+    var bounciness = 0.99 + Math.random() / 100;
+
+    _engine.default.drawArc({
+      position: {
+        x: _engine.default.math.randomIntFromRange(30, _engine.default.canvas.width - 30),
+        y: _engine.default.math.randomIntFromRange(30, _engine.default.canvas.height - 30)
+      },
+      radius: _engine.default.math.randomIntFromRange(20, 40),
+      startAng: 0,
+      endAng: Math.PI * 2,
+      color: 'black',
+      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
+      update: function update(element) {
+        if (element.position.y + element.radius + vy > _engine.default.canvas.height) {
+          vy = -vy * bounciness;
+        } else {
+          vy += gravity;
+        }
+
+        if (element.position.x + element.radius + vx > _engine.default.canvas.width || element.position.x - element.radius + vx < 0) {
+          vx = -vx;
+        }
+
+        element.position.x += vx;
+        element.position.y += vy;
+        element.draw();
       }
+    });
+  };
 
-      element.position.x += vx;
-      element.draw();
-    }
+  for (var i = 0; i < ballCount; i++) {
+    _loop(i);
+  }
+
+  _engine.default.startAnimation(60, function () {
+    _engine.default.canvas.width = innerWidth;
+    _engine.default.canvas.height = innerHeight;
   });
+}
 
-  _engine.default.startAnimation(60);
-};
+window.onload = animation2;
 },{"./engine/engine.js":"engine/engine.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -361,7 +403,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59356" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64244" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -537,5 +579,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","kak.js"], null)
-//# sourceMappingURL=/kak.72789f2e.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","animation2.js"], null)
+//# sourceMappingURL=/animation2.48b708df.js.map

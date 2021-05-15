@@ -1,6 +1,12 @@
 let scene = {
     canvas: document.createElement('canvas'),
     elements: [],
+    math: {
+        randomIntFromRange: (min, max) => {
+            return Math.random() * (max - min) + min;
+        },
+    },
+    physics: {},
     clear: () => {
         scene.context.clearRect(0, 0, scene.canvas.width, scene.canvas.height);
     },

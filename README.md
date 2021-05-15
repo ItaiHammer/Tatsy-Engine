@@ -67,5 +67,11 @@
         -   `animation <Function> _not required_` - This is the function that is going to be running every frame of the animation
 
     -   **`scene.findElementByName()`** - Locates a specific element by its name
+
         -   _Arguments:_
         -   `name <String> _required_` - The name of the element you want to locate
+
+    -   **`scene.math.randomIntFromRange()`** - Gives you a random int from a range of two numbers
+        -   _Arguments:_
+        -   `min <Int> _required_` - The minimum number the function returns
+        -   `max <Int> _required_` - The maximum number the function returns

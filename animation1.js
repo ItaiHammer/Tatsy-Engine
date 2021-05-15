@@ -1,6 +1,6 @@
 import scene from './engine/engine.js';
 
-function animation1() {
+export default function animation1() {
     scene.start({
         sceneParent: document.body,
         width: innerWidth,
@@ -19,7 +19,7 @@ function animation1() {
         mouse.y = e.y;
     });
 
-    const ballCount = 1500;
+    const ballCount = Math.floor(innerWidth / 2);
 
     for (let i = 0; ballCount > i; i++) {
         let vx = (Math.random() - 0.5) * 2;
@@ -77,5 +77,3 @@ function animation1() {
         scene.canvas.height = innerHeight;
     });
 }
-
-export default animation1;
