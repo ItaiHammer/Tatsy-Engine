@@ -132,14 +132,8 @@ var scene = {
   },
   start: function start(data) {
     //setting up canvas
-    if (data.width != null) {
-      scene.canvas.width = data.width;
-    }
-
-    if (data.height != null) {
-      scene.canvas.height = data.height;
-    }
-
+    scene.canvas.width = data.width;
+    scene.canvas.height = data.height;
     scene.context = scene.canvas.getContext('2d');
     var context = scene.context; //handling functions
 
@@ -301,100 +295,45 @@ var scene = {
 };
 var _default = scene;
 exports.default = _default;
-},{}],"animation1.js":[function(require,module,exports) {
+},{}],"kak.js":[function(require,module,exports) {
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
 
 var _engine = _interopRequireDefault(require("./engine/engine.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function animation1() {
+window.onload = function () {
   _engine.default.start({
     sceneParent: document.body,
-    width: innerWidth,
-    height: innerHeight
+    width: 500,
+    height: 500
   });
 
-  var mouse = {
-    x: -100,
-    y: -100
-  };
-  var colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92'];
-  window.addEventListener('mousemove', function (e) {
-    mouse.x = e.x;
-    mouse.y = e.y;
-  });
-  var ballCount = 1500;
+  var vx = 5;
 
-  var _loop = function _loop(i) {
-    var vx = (Math.random() - 0.5) * 2;
-    var vy = (Math.random() - 0.5) * 2;
-    var minRadius = Math.random() * 6 + 2;
-    var maxRadius = Math.random() * 30 + 20;
-    var interactionDistance = 50;
-
-    _engine.default.drawArc({
-      position: {
-        x: Math.random() * _engine.default.canvas.width - 30,
-        y: Math.random() * _engine.default.canvas.height - 30
-      },
-      radius: minRadius,
-      startAng: 0,
-      endAng: Math.PI * 2,
-      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
-      update: function update(element) {
-        if (element.position.x + element.radius > _engine.default.canvas.width || element.position.x - element.radius < 0) {
-          vx = -vx;
-        }
-
-        if (element.position.y + element.radius > _engine.default.canvas.height || element.position.y - element.radius < 0) {
-          vy = -vy;
-        }
-
-        element.position.x += vx;
-        element.position.y += vy; //interaction
-
-        if (mouse.x - element.position.x < interactionDistance && mouse.x - element.position.x > -interactionDistance && mouse.y - element.position.y < interactionDistance && mouse.y - element.position.y > -interactionDistance && element.radius < maxRadius) {
-          element.radius++;
-        } else if (element.radius > minRadius) {
-          element.radius--;
-        }
-
-        element.draw();
+  _engine.default.drawRect({
+    position: {
+      x: 100,
+      y: _engine.default.canvas.width / 2 - 50
+    },
+    size: {
+      x: 100,
+      y: 100
+    },
+    color: 'brown',
+    update: function update(element) {
+      if (element.position.x + element.size.x > _engine.default.canvas.width || element.position.x < 0) {
+        vx = -vx;
       }
-    });
-  };
 
-  for (var i = 0; ballCount > i; i++) {
-    _loop(i);
-  }
-
-  _engine.default.startAnimation(60, function () {
-    _engine.default.canvas.width = innerWidth;
-    _engine.default.canvas.height = innerHeight;
+      element.position.x += vx;
+      element.draw();
+    }
   });
-}
 
-var _default = animation1;
-exports.default = _default;
-},{"./engine/engine.js":"engine/engine.js"}],"example.js":[function(require,module,exports) {
-"use strict";
-
-var _animation = _interopRequireDefault(require("./animation1.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var animations = [_animation.default];
-
-window.onload = function () {
-  return animations[Math.floor(Math.random() * animations.length)]();
+  _engine.default.startAnimation(60);
 };
-},{"./animation1.js":"animation1.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./engine/engine.js":"engine/engine.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -598,5 +537,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","example.js"], null)
-//# sourceMappingURL=/example.438d3af2.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","kak.js"], null)
+//# sourceMappingURL=/kak.72789f2e.js.map

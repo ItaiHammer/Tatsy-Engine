@@ -117,284 +117,74 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"engine/engine.js":[function(require,module,exports) {
-"use strict";
+})({"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var scene = {
-  canvas: document.createElement('canvas'),
-  elements: [],
-  clear: function clear() {
-    scene.context.clearRect(0, 0, scene.canvas.width, scene.canvas.height);
-  },
-  start: function start(data) {
-    //setting up canvas
-    if (data.width != null) {
-      scene.canvas.width = data.width;
-    }
-
-    if (data.height != null) {
-      scene.canvas.height = data.height;
-    }
-
-    scene.context = scene.canvas.getContext('2d');
-    var context = scene.context; //handling functions
-
-    scene.handleColor = function (color) {
-      return color == null || color === '' ? 'black' : color;
-    };
-
-    var handleColor = scene.handleColor; //drawing functions
-    //drawing rectangle
-
-    scene.drawRect = function (data) {
-      function Rect(name, positionX, positionY, sizeX, sizeY, color, update) {
-        var _this = this;
-
-        this.name = name;
-        this.position = {
-          x: positionX,
-          y: positionY
-        };
-        this.size = {
-          x: sizeX,
-          y: sizeY
-        };
-        this.color = handleColor(data.color);
-        context.fillStyle = this.color;
-
-        this.draw = function () {
-          context.fillRect(_this.position.x, _this.position.y, _this.size.x, _this.size.y);
-        };
-
-        this.update = update == null ? function () {
-          _this.draw();
-        } : update;
-      }
-
-      scene.elements.push(new Rect(data.name, data.position.x, data.position.y, data.size.x, data.size.y, data.color, data.update)); //drawing everything on the scene
-
-      scene.elements.forEach(function (element) {
-        return element.draw();
-      });
-    }; //drawing line
-
-
-    scene.drawPath = function (data) {
-      //handling color
-      data.color = handleColor(data.color);
-
-      function Path(name, startPos, paths, color, update) {
-        var _this2 = this;
-
-        this.name = name;
-        this.startPos = startPos;
-        this.paths = paths;
-        this.color = color;
-
-        this.draw = function () {
-          context.beginPath();
-          context.moveTo(startPos.x, startPos.y);
-          data.paths.forEach(function (path) {
-            context.lineTo(path.x, path.y);
-          });
-          context.strokeStyle = color;
-          context.stroke();
-        };
-
-        this.update = update == null ? function () {
-          _this2.draw();
-        } : update;
-      }
-
-      scene.elements.push(new Path(data.name, data.startPos, data.paths, data.color, data.update)); //drawing everything on the scene
-
-      scene.elements.forEach(function (element) {
-        return element.draw();
-      });
-    }; //drawing arc
-
-
-    scene.drawArc = function (data) {
-      data.drawCounterClockWise = data.drawCounterClockWise == null ? false : data.drawCounterClockWise;
-
-      function Arc(name, position, radius, startAng, endAng, drawCounterClockWise, color, fill, update) {
-        var _this3 = this;
-
-        this.name = name;
-        this.position = position;
-        this.radius = radius;
-        this.startAng = startAng;
-        this.endAng = endAng;
-        this.drawCounterClockWise = drawCounterClockWise;
-        this.color = color;
-        this.fill = fill;
-
-        this.draw = function () {
-          context.beginPath();
-          context.arc(_this3.position.x, _this3.position.y, _this3.radius, _this3.startAng, _this3.endAng, _this3.drawCounterClockWise);
-
-          if (_this3.color != null) {
-            context.strokeStyle = _this3.color;
-            context.stroke();
-          }
-
-          if (_this3.fill != null) {
-            context.fillStyle = _this3.fill;
-            context.fill();
-          }
-        };
-
-        this.update = update == null ? function () {
-          _this3.draw();
-        } : update;
-      }
-
-      scene.elements.push(new Arc(data.name, data.position, data.radius, data.startAng, data.endAng, data.drawCounterClockWise, data.color, data.fill, data.update)); //finding functions
-
-      scene.findElementByName = function (name) {
-        var foundElement = false;
-        var i = 0;
-        scene.elements.forEach(function (element) {
-          if (element.name === name) {
-            foundElement = true;
-          } else if (foundElement === false) {
-            i++;
-          }
-        });
-
-        if (foundElement === true) {
-          return scene.elements[i];
-        } else {
-          return null;
-        }
-      }; //drawing everything on the scene
-
-
-      scene.elements.forEach(function (element) {
-        return element.draw();
-      });
-    }; //animation functions
-
-
-    scene.startAnimation = function (frameRate, animation) {
-      setInterval(function () {
-        scene.clear();
-
-        if (animation != null) {
-          animation();
-        } //drawing everything on the scene
-
-
-        scene.elements.forEach(function (element) {
-          return element.update(element);
-        });
-      }, 1000 / frameRate);
-    }; //appending canvas into the DOM
-
-
-    data.sceneParent.append(scene.canvas);
-  }
-};
-var _default = scene;
-exports.default = _default;
-},{}],"animation1.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _engine = _interopRequireDefault(require("./engine/engine.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function animation1() {
-  _engine.default.start({
-    sceneParent: document.body,
-    width: innerWidth,
-    height: innerHeight
-  });
-
-  var mouse = {
-    x: -100,
-    y: -100
-  };
-  var colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92'];
-  window.addEventListener('mousemove', function (e) {
-    mouse.x = e.x;
-    mouse.y = e.y;
-  });
-  var ballCount = 1500;
-
-  var _loop = function _loop(i) {
-    var vx = (Math.random() - 0.5) * 2;
-    var vy = (Math.random() - 0.5) * 2;
-    var minRadius = Math.random() * 6 + 2;
-    var maxRadius = Math.random() * 30 + 20;
-    var interactionDistance = 50;
-
-    _engine.default.drawArc({
-      position: {
-        x: Math.random() * _engine.default.canvas.width - 30,
-        y: Math.random() * _engine.default.canvas.height - 30
-      },
-      radius: minRadius,
-      startAng: 0,
-      endAng: Math.PI * 2,
-      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
-      update: function update(element) {
-        if (element.position.x + element.radius > _engine.default.canvas.width || element.position.x - element.radius < 0) {
-          vx = -vx;
-        }
-
-        if (element.position.y + element.radius > _engine.default.canvas.height || element.position.y - element.radius < 0) {
-          vy = -vy;
-        }
-
-        element.position.x += vx;
-        element.position.y += vy; //interaction
-
-        if (mouse.x - element.position.x < interactionDistance && mouse.x - element.position.x > -interactionDistance && mouse.y - element.position.y < interactionDistance && mouse.y - element.position.y > -interactionDistance && element.radius < maxRadius) {
-          element.radius++;
-        } else if (element.radius > minRadius) {
-          element.radius--;
-        }
-
-        element.draw();
-      }
-    });
-  };
-
-  for (var i = 0; ballCount > i; i++) {
-    _loop(i);
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
   }
 
-  _engine.default.startAnimation(60, function () {
-    _engine.default.canvas.width = innerWidth;
-    _engine.default.canvas.height = innerHeight;
-  });
+  return bundleURL;
 }
 
-var _default = animation1;
-exports.default = _default;
-},{"./engine/engine.js":"engine/engine.js"}],"example.js":[function(require,module,exports) {
-"use strict";
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
 
-var _animation = _interopRequireDefault(require("./animation1.js"));
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  return '/';
+}
 
-var animations = [_animation.default];
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
+}
 
-window.onload = function () {
-  return animations[Math.floor(Math.random() * animations.length)]();
-};
-},{"./animation1.js":"animation1.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
+  };
+
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+
+    cssTimeout = null;
+  }, 50);
+}
+
+module.exports = reloadCSS;
+},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -598,5 +388,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","example.js"], null)
-//# sourceMappingURL=/example.438d3af2.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
+//# sourceMappingURL=/example.js.map
