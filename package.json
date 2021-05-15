@@ -1,5 +1,5 @@
 {
-    "name": "tatsy-engine",
+    "name": "engine-example",
     "version": "1.0.0",
     "description": "",
     "main": "game.js",
