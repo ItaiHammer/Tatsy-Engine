@@ -169,7 +169,7 @@ var scene = {
           x: sizeX,
           y: sizeY
         };
-        this.color = handleColor(data.color);
+        this.color = handleColor(color);
         context.fillStyle = this.color;
 
         this.draw = function () {
@@ -259,26 +259,56 @@ var scene = {
         } : update;
       }
 
-      scene.elements.push(new Arc(data.name, data.position, data.radius, data.startAng, data.endAng, data.drawCounterClockWise, data.color, data.fill, data.update)); //finding functions
+      scene.elements.push(new Arc(data.name, data.position, data.radius, data.startAng, data.endAng, data.drawCounterClockWise, data.color, data.fill, data.update)); //drawing everything on the scene
 
-      scene.findElementByName = function (name) {
-        var foundElement = false;
-        var i = 0;
-        scene.elements.forEach(function (element) {
-          if (element.name === name) {
-            foundElement = true;
-          } else if (foundElement === false) {
-            i++;
-          }
-        });
+      scene.elements.forEach(function (element) {
+        return element.draw();
+      });
+    }; //finding functions
 
-        if (foundElement === true) {
-          return scene.elements[i];
-        } else {
-          return null;
+
+    scene.findElementByName = function (name) {
+      var foundElement = false;
+      var i = 0;
+      scene.elements.forEach(function (element) {
+        if (element.name === name) {
+          foundElement = true;
+        } else if (foundElement === false) {
+          i++;
         }
-      }; //drawing everything on the scene
+      });
 
+      if (foundElement === true) {
+        return scene.elements[i];
+      } else {
+        return null;
+      }
+    };
+
+    scene.drawText = function (data) {
+      function Text(name, position, text, size, family, color, update) {
+        var _this4 = this;
+
+        this.name = name;
+        this.position = position;
+        this.text = text;
+        this.size = String(size).substr(String(size).lenth - 2) === 'px' ? String(size) : "".concat(size, "px");
+        this.family = family == null ? 'Arial' : family;
+        this.color = scene.handleColor(color);
+
+        this.draw = function () {
+          context.font = "".concat(_this4.size, " ").concat(_this4.family);
+          context.fillStyle = _this4.color;
+          context.fillText(_this4.text, _this4.position.x, _this4.position.y);
+        };
+
+        this.update = update == null ? function () {
+          _this4.draw();
+        } : update;
+        console.log(this);
+      }
+
+      scene.elements.push(new Text(data.name, data.position, data.text, data.size, data.family, data.color, data.update)); //drawing everything on the scene
 
       scene.elements.forEach(function (element) {
         return element.draw();
@@ -340,14 +370,17 @@ function animation1() {
   var _loop = function _loop(i) {
     var vx = (Math.random() - 0.5) * 2;
     var vy = (Math.random() - 0.5) * 2;
-    var minRadius = Math.random() * 6 + 2;
-    var maxRadius = Math.random() * 30 + 20;
+
+    var minRadius = _engine.default.math.randomIntFromRange(2, 8);
+
+    var maxRadius = _engine.default.math.randomIntFromRange(20, 30);
+
     var interactionDistance = 50;
 
     _engine.default.drawArc({
       position: {
-        x: Math.random() * _engine.default.canvas.width - 30,
-        y: Math.random() * _engine.default.canvas.height - 30
+        x: _engine.default.math.randomIntFromRange(30, _engine.default.canvas.width - 30),
+        y: _engine.default.math.randomIntFromRange(30, _engine.default.canvas.height - 30)
       },
       radius: minRadius,
       startAng: 0,
@@ -492,7 +525,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64244" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50405" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

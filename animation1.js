@@ -24,14 +24,14 @@ export default function animation1() {
     for (let i = 0; ballCount > i; i++) {
         let vx = (Math.random() - 0.5) * 2;
         let vy = (Math.random() - 0.5) * 2;
-        let minRadius = Math.random() * 6 + 2;
-        let maxRadius = Math.random() * 30 + 20;
+        let minRadius = scene.math.randomIntFromRange(2, 8);
+        let maxRadius = scene.math.randomIntFromRange(20, 30);
         let interactionDistance = 50;
 
         scene.drawArc({
             position: {
-                x: Math.random() * scene.canvas.width - 30,
-                y: Math.random() * scene.canvas.height - 30,
+                x: scene.math.randomIntFromRange(30, scene.canvas.width - 30),
+                y: scene.math.randomIntFromRange(30, scene.canvas.height - 30),
             },
             radius: minRadius,
             startAng: 0,

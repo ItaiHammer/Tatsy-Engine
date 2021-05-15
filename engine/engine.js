@@ -43,7 +43,7 @@ let scene = {
                 this.name = name;
                 this.position = { x: positionX, y: positionY };
                 this.size = { x: sizeX, y: sizeY };
-                this.color = handleColor(data.color);
+                this.color = handleColor(color);
 
                 context.fillStyle = this.color;
 
@@ -194,25 +194,73 @@ let scene = {
                 )
             );
 
-            //finding functions
-            scene.findElementByName = (name) => {
-                let foundElement = false;
-                let i = 0;
+            //drawing everything on the scene
+            scene.elements.forEach((element) => element.draw());
+        };
 
-                scene.elements.forEach((element) => {
-                    if (element.name === name) {
-                        foundElement = true;
-                    } else if (foundElement === false) {
-                        i++;
-                    }
-                });
+        //finding functions
+        scene.findElementByName = (name) => {
+            let foundElement = false;
+            let i = 0;
 
-                if (foundElement === true) {
-                    return scene.elements[i];
-                } else {
-                    return null;
+            scene.elements.forEach((element) => {
+                if (element.name === name) {
+                    foundElement = true;
+                } else if (foundElement === false) {
+                    i++;
                 }
-            };
+            });
+
+            if (foundElement === true) {
+                return scene.elements[i];
+            } else {
+                return null;
+            }
+        };
+
+        scene.drawText = (data) => {
+            function Text(name, position, text, size, family, color, update) {
+                this.name = name;
+                this.position = position;
+                this.text = text;
+                this.size =
+                    String(size).substr(String(size).lenth - 2) === 'px'
+                        ? String(size)
+                        : `${size}px`;
+                this.family = family == null ? 'Arial' : family;
+                this.color = scene.handleColor(color);
+
+                this.draw = () => {
+                    context.font = `${this.size} ${this.family}`;
+                    context.fillStyle = this.color;
+                    context.fillText(
+                        this.text,
+                        this.position.x,
+                        this.position.y
+                    );
+                };
+
+                this.update =
+                    update == null
+                        ? () => {
+                              this.draw();
+                          }
+                        : update;
+
+                console.log(this);
+            }
+
+            scene.elements.push(
+                new Text(
+                    data.name,
+                    data.position,
+                    data.text,
+                    data.size,
+                    data.family,
+                    data.color,
+                    data.update
+                )
+            );
 
             //drawing everything on the scene
             scene.elements.forEach((element) => element.draw());
