@@ -27,6 +27,7 @@ export default function animation1() {
         let minRadius = scene.math.randomIntFromRange(2, 8);
         let maxRadius = scene.math.randomIntFromRange(20, 30);
         let interactionDistance = 50;
+        let mass = 1;
 
         scene.drawArc({
             position: {

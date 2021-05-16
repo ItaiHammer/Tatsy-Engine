@@ -130,11 +130,21 @@ var scene = {
   math: {
     randomIntFromRange: function randomIntFromRange(min, max) {
       return Math.random() * (max - min) + min;
+    },
+    randomColor: function randomColor() {
+      return "rgb(".concat(Math.random() * 255, ", ").concat(Math.random() * 255, ", ").concat(Math.random() * 255);
+    },
+    getDistance: function getDistance(x1, y1, x2, y2) {
+      var xDistance = x2 - x1;
+      var yDistance = y2 - y1;
+      return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
     }
   },
-  physics: {},
   clear: function clear() {
     scene.context.clearRect(0, 0, scene.canvas.width, scene.canvas.height);
+  },
+  animationClear: function animationClear() {
+    scene.clear();
   },
   start: function start(data) {
     //setting up canvas
@@ -157,7 +167,7 @@ var scene = {
     //drawing rectangle
 
     scene.drawRect = function (data) {
-      function Rect(name, positionX, positionY, sizeX, sizeY, color, update) {
+      function Rect(name, positionX, positionY, sizeX, sizeY, color, update, customVars) {
         var _this = this;
 
         this.name = name;
@@ -170,9 +180,10 @@ var scene = {
           y: sizeY
         };
         this.color = handleColor(color);
-        context.fillStyle = this.color;
+        this.customVars = customVars;
 
         this.draw = function () {
+          context.fillStyle = _this.color;
           context.fillRect(_this.position.x, _this.position.y, _this.size.x, _this.size.y);
         };
 
@@ -181,7 +192,7 @@ var scene = {
         } : update;
       }
 
-      scene.elements.push(new Rect(data.name, data.position.x, data.position.y, data.size.x, data.size.y, data.color, data.update)); //drawing everything on the scene
+      scene.elements.push(new Rect(data.name, data.position.x, data.position.y, data.size.x, data.size.y, data.color, data.update, data.customVars)); //drawing everything on the scene
 
       scene.elements.forEach(function (element) {
         return element.draw();
@@ -193,13 +204,14 @@ var scene = {
       //handling color
       data.color = handleColor(data.color);
 
-      function Path(name, startPos, paths, color, update) {
+      function Path(name, startPos, paths, color, update, customVars) {
         var _this2 = this;
 
         this.name = name;
         this.startPos = startPos;
         this.paths = paths;
         this.color = color;
+        this.customVars = customVars;
 
         this.draw = function () {
           context.beginPath();
@@ -216,7 +228,7 @@ var scene = {
         } : update;
       }
 
-      scene.elements.push(new Path(data.name, data.startPos, data.paths, data.color, data.update)); //drawing everything on the scene
+      scene.elements.push(new Path(data.name, data.startPos, data.paths, data.color, data.update, data.customVars)); //drawing everything on the scene
 
       scene.elements.forEach(function (element) {
         return element.draw();
@@ -227,7 +239,7 @@ var scene = {
     scene.drawArc = function (data) {
       data.drawCounterClockWise = data.drawCounterClockWise == null ? false : data.drawCounterClockWise;
 
-      function Arc(name, position, radius, startAng, endAng, drawCounterClockWise, color, fill, update) {
+      function Arc(name, position, radius, startAng, endAng, drawCounterClockWise, color, fill, update, customVars) {
         var _this3 = this;
 
         this.name = name;
@@ -238,6 +250,7 @@ var scene = {
         this.drawCounterClockWise = drawCounterClockWise;
         this.color = color;
         this.fill = fill;
+        this.customVars = customVars;
 
         this.draw = function () {
           context.beginPath();
@@ -259,7 +272,39 @@ var scene = {
         } : update;
       }
 
-      scene.elements.push(new Arc(data.name, data.position, data.radius, data.startAng, data.endAng, data.drawCounterClockWise, data.color, data.fill, data.update)); //drawing everything on the scene
+      scene.elements.push(new Arc(data.name, data.position, data.radius, data.startAng, data.endAng, data.drawCounterClockWise, data.color, data.fill, data.update, data.customVars)); //drawing everything on the scene
+
+      scene.elements.forEach(function (element) {
+        return element.draw();
+      });
+    }; //drawing text
+
+
+    scene.drawText = function (data) {
+      function Text(name, position, text, size, family, color, update, customVars) {
+        var _this4 = this;
+
+        this.name = name;
+        this.position = position;
+        this.text = text;
+        this.size = String(size).substr(String(size).lenth - 2) === 'px' ? String(size) : "".concat(size, "px");
+        this.family = family == null ? 'Arial' : family;
+        this.color = scene.handleColor(color);
+        this.customVars = customVars;
+
+        this.draw = function () {
+          context.font = "".concat(_this4.size, " ").concat(_this4.family);
+          context.fillStyle = _this4.color;
+          context.fillText(_this4.text, _this4.position.x, _this4.position.y);
+        };
+
+        this.update = update == null ? function () {
+          _this4.draw();
+        } : update;
+        console.log(this);
+      }
+
+      scene.elements.push(new Text(data.name, data.position, data.text, data.size, data.family, data.color, data.update, data.customVars)); //drawing everything on the scene
 
       scene.elements.forEach(function (element) {
         return element.draw();
@@ -267,7 +312,7 @@ var scene = {
     }; //finding functions
 
 
-    scene.findElementByName = function (name) {
+    scene.getElementByName = function (name) {
       var foundElement = false;
       var i = 0;
       scene.elements.forEach(function (element) {
@@ -283,51 +328,27 @@ var scene = {
       } else {
         return null;
       }
-    };
-
-    scene.drawText = function (data) {
-      function Text(name, position, text, size, family, color, update) {
-        var _this4 = this;
-
-        this.name = name;
-        this.position = position;
-        this.text = text;
-        this.size = String(size).substr(String(size).lenth - 2) === 'px' ? String(size) : "".concat(size, "px");
-        this.family = family == null ? 'Arial' : family;
-        this.color = scene.handleColor(color);
-
-        this.draw = function () {
-          context.font = "".concat(_this4.size, " ").concat(_this4.family);
-          context.fillStyle = _this4.color;
-          context.fillText(_this4.text, _this4.position.x, _this4.position.y);
-        };
-
-        this.update = update == null ? function () {
-          _this4.draw();
-        } : update;
-        console.log(this);
-      }
-
-      scene.elements.push(new Text(data.name, data.position, data.text, data.size, data.family, data.color, data.update)); //drawing everything on the scene
-
-      scene.elements.forEach(function (element) {
-        return element.draw();
-      });
     }; //animation functions
 
 
-    scene.startAnimation = function (frameRate, animation) {
+    scene.startAnimation = function (frameRate, animation, extras) {
       setInterval(function () {
-        scene.clear();
+        if (extras === true || extras == null) {
+          scene.animationClear();
 
-        if (animation != null) {
-          animation();
-        } //drawing everything on the scene
+          if (animation != null) {
+            animation();
+          } //drawing everything on the scene
 
 
-        scene.elements.forEach(function (element) {
-          return element.update(element);
-        });
+          scene.elements.forEach(function (element) {
+            return element.update(element);
+          });
+        } else {
+          if (animation != null) {
+            animation();
+          }
+        }
       }, 1000 / frameRate);
     }; //appending canvas into the DOM
 
@@ -376,6 +397,7 @@ function animation1() {
     var maxRadius = _engine.default.math.randomIntFromRange(20, 30);
 
     var interactionDistance = 50;
+    var mass = 1;
 
     _engine.default.drawArc({
       position: {
@@ -483,6 +505,87 @@ function animation2() {
     _engine.default.canvas.height = innerHeight;
   });
 }
+},{"./engine/engine.js":"engine/engine.js"}],"animation3.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = animation3;
+
+var _engine = _interopRequireDefault(require("./engine/engine.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function animation3() {
+  _engine.default.start({
+    sceneParent: document.body,
+    width: innerWidth,
+    height: innerHeight
+  });
+
+  window.addEventListener('mousemove', function (e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+  var mouse = {
+    x: _engine.default.canvas.width / 2,
+    y: _engine.default.canvas.height / 2
+  };
+  var colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92'];
+  var ballCount = innerWidth / 20;
+
+  for (var i = 0; i < ballCount; i++) {
+    _engine.default.drawArc({
+      position: {
+        x: _engine.default.canvas.width / 2,
+        y: _engine.default.canvas.height / 2
+      },
+      radius: _engine.default.math.randomIntFromRange(5, 8),
+      startAng: 0,
+      endAng: Math.PI * 2,
+      customVars: {
+        radians: Math.random() * Math.PI * 2,
+        velocity: 0.01,
+        distanceFromCenter: _engine.default.math.randomIntFromRange(20, innerWidth / 2),
+        lastMouse: {
+          x: _engine.default.canvas.width / 2,
+          y: _engine.default.canvas.height / 2
+        }
+      },
+      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
+      update: function update(element) {
+        //smoothing mouse animation
+        element.customVars.lastMouse.x += (mouse.x - element.customVars.lastMouse.x) * 0.05;
+        element.customVars.lastMouse.y += (mouse.y - element.customVars.lastMouse.y) * 0.05; //move points overtime in a circular motion
+
+        element.customVars.radians += element.customVars.velocity;
+        element.position.x = element.customVars.lastMouse.x + Math.cos(element.customVars.radians) * element.customVars.distanceFromCenter;
+        element.position.y = element.customVars.lastMouse.y + Math.sin(element.customVars.radians) * element.customVars.distanceFromCenter;
+        element.draw();
+      }
+    });
+  }
+
+  _engine.default.drawRect({
+    name: 'fadingEffect',
+    position: {
+      x: 0,
+      y: 0
+    },
+    size: {
+      x: _engine.default.canvas.width,
+      y: _engine.default.canvas.height
+    },
+    color: 'rgba(255,255,255, 0.05)'
+  });
+
+  _engine.default.startAnimation(300, function () {
+    _engine.default.elements.forEach(function (element) {
+      return element.update(element);
+    });
+  }, false);
+}
 },{"./engine/engine.js":"engine/engine.js"}],"example.js":[function(require,module,exports) {
 "use strict";
 
@@ -490,14 +593,13 @@ var _animation = _interopRequireDefault(require("./animation1.js"));
 
 var _animation2 = _interopRequireDefault(require("./animation2.js"));
 
+var _animation3 = _interopRequireDefault(require("./animation3.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var animations = [_animation.default, _animation2.default];
-
-window.onload = function () {
-  return animations[Math.floor(Math.random() * animations.length)]();
-};
-},{"./animation1.js":"animation1.js","./animation2.js":"animation2.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var animations = [_animation.default, _animation2.default, _animation3.default];
+window.onload = animations[Math.floor(Math.random() * animations.length)];
+},{"./animation1.js":"animation1.js","./animation2.js":"animation2.js","./animation3.js":"animation3.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -525,7 +627,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50405" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54391" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

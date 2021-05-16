@@ -5,10 +5,23 @@ let scene = {
         randomIntFromRange: (min, max) => {
             return Math.random() * (max - min) + min;
         },
+        randomColor: () => {
+            return `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${
+                Math.random() * 255
+            }`;
+        },
+        getDistance: (x1, y1, x2, y2) => {
+            let xDistance = x2 - x1;
+            let yDistance = y2 - y1;
+
+            return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+        },
     },
-    physics: {},
     clear: () => {
         scene.context.clearRect(0, 0, scene.canvas.width, scene.canvas.height);
+    },
+    animationClear: () => {
+        scene.clear();
     },
     start: (data) => {
         //setting up canvas
@@ -22,7 +35,6 @@ let scene = {
         const context = scene.context;
 
         //handling functions
-
         scene.handleColor = (color) => {
             return color == null || color === '' ? 'black' : color;
         };
@@ -38,16 +50,17 @@ let scene = {
                 sizeX,
                 sizeY,
                 color,
-                update
+                update,
+                customVars
             ) {
                 this.name = name;
                 this.position = { x: positionX, y: positionY };
                 this.size = { x: sizeX, y: sizeY };
                 this.color = handleColor(color);
-
-                context.fillStyle = this.color;
+                this.customVars = customVars;
 
                 this.draw = () => {
+                    context.fillStyle = this.color;
                     context.fillRect(
                         this.position.x,
                         this.position.y,
@@ -72,7 +85,8 @@ let scene = {
                     data.size.x,
                     data.size.y,
                     data.color,
-                    data.update
+                    data.update,
+                    data.customVars
                 )
             );
 
@@ -85,11 +99,12 @@ let scene = {
             //handling color
             data.color = handleColor(data.color);
 
-            function Path(name, startPos, paths, color, update) {
+            function Path(name, startPos, paths, color, update, customVars) {
                 this.name = name;
                 this.startPos = startPos;
                 this.paths = paths;
                 this.color = color;
+                this.customVars = customVars;
 
                 this.draw = () => {
                     context.beginPath();
@@ -117,7 +132,8 @@ let scene = {
                     data.startPos,
                     data.paths,
                     data.color,
-                    data.update
+                    data.update,
+                    data.customVars
                 )
             );
 
@@ -141,7 +157,8 @@ let scene = {
                 drawCounterClockWise,
                 color,
                 fill,
-                update
+                update,
+                customVars
             ) {
                 this.name = name;
                 this.position = position;
@@ -151,6 +168,7 @@ let scene = {
                 this.drawCounterClockWise = drawCounterClockWise;
                 this.color = color;
                 this.fill = fill;
+                this.customVars = customVars;
 
                 this.draw = () => {
                     context.beginPath();
@@ -190,7 +208,8 @@ let scene = {
                     data.drawCounterClockWise,
                     data.color,
                     data.fill,
-                    data.update
+                    data.update,
+                    data.customVars
                 )
             );
 
@@ -198,28 +217,18 @@ let scene = {
             scene.elements.forEach((element) => element.draw());
         };
 
-        //finding functions
-        scene.findElementByName = (name) => {
-            let foundElement = false;
-            let i = 0;
-
-            scene.elements.forEach((element) => {
-                if (element.name === name) {
-                    foundElement = true;
-                } else if (foundElement === false) {
-                    i++;
-                }
-            });
-
-            if (foundElement === true) {
-                return scene.elements[i];
-            } else {
-                return null;
-            }
-        };
-
+        //drawing text
         scene.drawText = (data) => {
-            function Text(name, position, text, size, family, color, update) {
+            function Text(
+                name,
+                position,
+                text,
+                size,
+                family,
+                color,
+                update,
+                customVars
+            ) {
                 this.name = name;
                 this.position = position;
                 this.text = text;
@@ -229,6 +238,7 @@ let scene = {
                         : `${size}px`;
                 this.family = family == null ? 'Arial' : family;
                 this.color = scene.handleColor(color);
+                this.customVars = customVars;
 
                 this.draw = () => {
                     context.font = `${this.size} ${this.family}`;
@@ -258,7 +268,8 @@ let scene = {
                     data.size,
                     data.family,
                     data.color,
-                    data.update
+                    data.update,
+                    data.customVars
                 )
             );
 
@@ -266,15 +277,43 @@ let scene = {
             scene.elements.forEach((element) => element.draw());
         };
 
-        //animation functions
-        scene.startAnimation = (frameRate, animation) => {
-            setInterval(() => {
-                scene.clear();
-                if (animation != null) {
-                    animation();
+        //finding functions
+        scene.getElementByName = (name) => {
+            let foundElement = false;
+            let i = 0;
+
+            scene.elements.forEach((element) => {
+                if (element.name === name) {
+                    foundElement = true;
+                } else if (foundElement === false) {
+                    i++;
                 }
-                //drawing everything on the scene
-                scene.elements.forEach((element) => element.update(element));
+            });
+
+            if (foundElement === true) {
+                return scene.elements[i];
+            } else {
+                return null;
+            }
+        };
+
+        //animation functions
+        scene.startAnimation = (frameRate, animation, extras) => {
+            setInterval(() => {
+                if (extras === true || extras == null) {
+                    scene.animationClear();
+                    if (animation != null) {
+                        animation();
+                    }
+                    //drawing everything on the scene
+                    scene.elements.forEach((element) =>
+                        element.update(element)
+                    );
+                } else {
+                    if (animation != null) {
+                        animation();
+                    }
+                }
             }, 1000 / frameRate);
         };
 
