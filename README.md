@@ -122,6 +122,11 @@ import scene from 'tasty-engine';
         -   _Arguments:_
         -   `name <String> _required_` - The name of the element you want to locate
 
+    -   **`scene.getElementById(id)`** - Returns a specific element by its name
+
+        -   _Arguments:_
+        -   `id <Int> _required_` - The id of the element you want to locate
+
     -   **`scene.math.randomIntFromRange(min, max)`** - Gives you a random int from a range of two numbers
 
         -   _Arguments:_

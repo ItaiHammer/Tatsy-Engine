@@ -436,235 +436,7 @@ var scene = {
 };
 var _default = scene;
 exports.default = _default;
-},{}],"animation1.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = animation1;
-
-var _engine = _interopRequireDefault(require("./engine/engine.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function animation1() {
-  _engine.default.start({
-    sceneParent: document.body,
-    width: innerWidth,
-    height: innerHeight
-  });
-
-  var mouse = {
-    x: -100,
-    y: -100
-  };
-  var colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92'];
-  window.addEventListener('mousemove', function (e) {
-    mouse.x = e.x;
-    mouse.y = e.y;
-  });
-  var ballCount = Math.floor(innerWidth / 2);
-
-  var _loop = function _loop(i) {
-    var vx = (Math.random() - 0.5) * 2;
-    var vy = (Math.random() - 0.5) * 2;
-
-    var minRadius = _engine.default.math.randomIntFromRange(2, 8);
-
-    var maxRadius = _engine.default.math.randomIntFromRange(20, 30);
-
-    var interactionDistance = 50;
-    var mass = 1;
-
-    _engine.default.drawArc({
-      position: {
-        x: _engine.default.math.randomIntFromRange(30, _engine.default.canvas.width - 30),
-        y: _engine.default.math.randomIntFromRange(30, _engine.default.canvas.height - 30)
-      },
-      radius: minRadius,
-      startAng: 0,
-      endAng: Math.PI * 2,
-      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
-      update: function update(element) {
-        if (element.position.x + element.radius > _engine.default.canvas.width || element.position.x - element.radius < 0) {
-          vx = -vx;
-        }
-
-        if (element.position.y + element.radius > _engine.default.canvas.height || element.position.y - element.radius < 0) {
-          vy = -vy;
-        }
-
-        element.position.x += vx;
-        element.position.y += vy; //interaction
-
-        if (mouse.x - element.position.x < interactionDistance && mouse.x - element.position.x > -interactionDistance && mouse.y - element.position.y < interactionDistance && mouse.y - element.position.y > -interactionDistance && element.radius < maxRadius) {
-          element.radius++;
-        } else if (element.radius > minRadius) {
-          element.radius--;
-        }
-
-        element.draw();
-      }
-    });
-  };
-
-  for (var i = 0; ballCount > i; i++) {
-    _loop(i);
-  }
-
-  _engine.default.startAnimation(60, function () {
-    _engine.default.canvas.width = innerWidth;
-    _engine.default.canvas.height = innerHeight;
-  });
-}
-},{"./engine/engine.js":"engine/engine.js"}],"animation2.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = animation2;
-
-var _engine = _interopRequireDefault(require("./engine/engine.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function animation2() {
-  _engine.default.start({
-    sceneParent: document.body,
-    width: innerWidth,
-    height: innerHeight
-  });
-
-  var colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92'];
-  var ballCount = Math.floor(innerWidth / 5);
-
-  var _loop = function _loop(i) {
-    var vy = 1;
-    var vx = (Math.random() - 0.5) * 10;
-    var gravity = 1;
-    var bounciness = 0.99 + Math.random() / 100;
-
-    _engine.default.drawArc({
-      position: {
-        x: _engine.default.math.randomIntFromRange(30, _engine.default.canvas.width - 30),
-        y: _engine.default.math.randomIntFromRange(30, _engine.default.canvas.height - 30)
-      },
-      radius: _engine.default.math.randomIntFromRange(20, 40),
-      startAng: 0,
-      endAng: Math.PI * 2,
-      color: 'black',
-      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
-      update: function update(element) {
-        if (element.position.y + element.radius + vy > _engine.default.canvas.height) {
-          vy = -vy * bounciness;
-        } else {
-          vy += gravity;
-        }
-
-        if (element.position.x + element.radius + vx > _engine.default.canvas.width || element.position.x - element.radius + vx < 0) {
-          vx = -vx;
-        }
-
-        element.position.x += vx;
-        element.position.y += vy;
-        element.draw();
-      }
-    });
-  };
-
-  for (var i = 0; i < ballCount; i++) {
-    _loop(i);
-  }
-
-  _engine.default.startAnimation(60, function () {
-    _engine.default.canvas.width = innerWidth;
-    _engine.default.canvas.height = innerHeight;
-  });
-}
-},{"./engine/engine.js":"engine/engine.js"}],"animation3.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = animation3;
-
-var _engine = _interopRequireDefault(require("./engine/engine.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function animation3() {
-  _engine.default.start({
-    sceneParent: document.body,
-    width: innerWidth,
-    height: innerHeight
-  });
-
-  window.addEventListener('mousemove', function (e) {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-  var mouse = {
-    x: _engine.default.canvas.width / 2,
-    y: _engine.default.canvas.height / 2
-  };
-  var colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92'];
-  var ballCount = innerWidth / 20;
-
-  for (var i = 0; i < ballCount; i++) {
-    _engine.default.drawArc({
-      position: {
-        x: _engine.default.canvas.width / 2,
-        y: _engine.default.canvas.height / 2
-      },
-      radius: _engine.default.math.randomIntFromRange(5, 8),
-      startAng: 0,
-      endAng: Math.PI * 2,
-      customVars: {
-        radians: Math.random() * Math.PI * 2,
-        velocity: 0.01,
-        distanceFromCenter: _engine.default.math.randomIntFromRange(20, innerWidth / 2),
-        lastMouse: {
-          x: _engine.default.canvas.width / 2,
-          y: _engine.default.canvas.height / 2
-        }
-      },
-      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
-      update: function update(element) {
-        //smoothing mouse animation
-        element.customVars.lastMouse.x += (mouse.x - element.customVars.lastMouse.x) * 0.05;
-        element.customVars.lastMouse.y += (mouse.y - element.customVars.lastMouse.y) * 0.05; //move points overtime in a circular motion
-
-        element.customVars.radians += element.customVars.velocity;
-        element.position.x = element.customVars.lastMouse.x + Math.cos(element.customVars.radians) * element.customVars.distanceFromCenter;
-        element.position.y = element.customVars.lastMouse.y + Math.sin(element.customVars.radians) * element.customVars.distanceFromCenter;
-        element.draw();
-      }
-    });
-  }
-
-  _engine.default.drawRect({
-    name: 'fadingEffect',
-    position: {
-      x: 0,
-      y: 0
-    },
-    size: {
-      x: _engine.default.canvas.width,
-      y: _engine.default.canvas.height
-    },
-    color: 'rgba(255,255,255, 0.05)'
-  });
-
-  _engine.default.startAnimation(300, function () {
-    _engine.default.elements.forEach(function (element) {
-      return element.update(element);
-    });
-  }, false);
-}
-},{"./engine/engine.js":"engine/engine.js"}],"animation4.js":[function(require,module,exports) {
+},{}],"animation4.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -695,87 +467,16 @@ function animation4() {
   var ballCount = {
     x: 5,
     y: _engine.default.canvas.width / 25
-  }; //drawing before timer starts
-  //drawing one row
-
-  var _loop = function _loop(i) {
-    var minRadius = 5;
-    var maxRadius = 10;
-
-    _engine.default.drawArc({
-      position: {
-        x: minRadius * i + i * 20 + 11,
-        y: _engine.default.canvas.height + minRadius
-      },
-      radius: minRadius,
-      startAng: 0,
-      endAng: Math.PI * 2,
-      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
-      update: function update(e) {
-        if (e.position.y < 0 - minRadius) {
-          e.delete();
-        }
-
-        if (_engine.default.math.getDistance(e.position.x, e.position.y, mouse.x, mouse.y) < 100 && e.radius < maxRadius) {
-          e.radius++;
-        } else if (e.radius > minRadius) {
-          e.radius--;
-        }
-
-        e.position.y -= 3;
-        e.draw();
-      }
-    });
-  };
-
-  for (var i = 0; i < ballCount.y; i++) {
-    _loop(i);
-  } //drawing one column
-
-
-  var _loop2 = function _loop2(_i) {
-    var minRadius = 5;
-    var maxRadius = 10;
-
-    _engine.default.drawArc({
-      position: {
-        x: 0,
-        y: minRadius * _i + _i * 20 + 11
-      },
-      radius: minRadius,
-      startAng: 0,
-      endAng: Math.PI * 2,
-      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
-      update: function update(e) {
-        if (e.position.x > _engine.default.canvas.width - minRadius) {
-          e.delete();
-        }
-
-        if (_engine.default.math.getDistance(e.position.x, e.position.y, mouse.x, mouse.y) < 100 && e.radius < maxRadius) {
-          e.radius++;
-        } else if (e.radius > minRadius) {
-          e.radius--;
-        }
-
-        e.position.x += 3;
-        e.draw();
-      }
-    });
-  };
-
-  for (var _i = 0; _i < ballCount.y; _i++) {
-    _loop2(_i);
-  } //interval for drawing rows
-
+  }; //interval for drawing rows
 
   setInterval(function () {
-    var _loop3 = function _loop3(_i2) {
+    var _loop = function _loop(i) {
       var minRadius = 5;
       var maxRadius = 10;
 
       _engine.default.drawArc({
         position: {
-          x: minRadius * _i2 + _i2 * 20 + 11,
+          x: minRadius * i + i * 20 + 11,
           y: _engine.default.canvas.height + minRadius
         },
         radius: minRadius,
@@ -800,19 +501,19 @@ function animation4() {
     };
 
     //drawing one row
-    for (var _i2 = 0; _i2 < ballCount.y; _i2++) {
-      _loop3(_i2);
+    for (var i = 0; i < ballCount.y; i++) {
+      _loop(i);
     } //drawing one column
 
 
-    var _loop4 = function _loop4(_i3) {
+    var _loop2 = function _loop2(_i) {
       var minRadius = 5;
       var maxRadius = 10;
 
       _engine.default.drawArc({
         position: {
           x: 0,
-          y: minRadius * _i3 + _i3 * 20 + 11
+          y: minRadius * _i + _i * 20 + 11
         },
         radius: minRadius,
         startAng: 0,
@@ -835,29 +536,14 @@ function animation4() {
       });
     };
 
-    for (var _i3 = 0; _i3 < ballCount.y; _i3++) {
-      _loop4(_i3);
+    for (var _i = 0; _i < ballCount.y; _i++) {
+      _loop2(_i);
     }
   }, 3000);
 
   _engine.default.startAnimation(60);
 }
-},{"./engine/engine.js":"engine/engine.js"}],"example.js":[function(require,module,exports) {
-"use strict";
-
-var _animation = _interopRequireDefault(require("./animation1.js"));
-
-var _animation2 = _interopRequireDefault(require("./animation2.js"));
-
-var _animation3 = _interopRequireDefault(require("./animation3.js"));
-
-var _animation4 = _interopRequireDefault(require("./animation4.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var animations = [_animation.default, _animation2.default, _animation3.default, _animation4.default];
-window.onload = animations[Math.floor(Math.random() * animations.length)];
-},{"./animation1.js":"animation1.js","./animation2.js":"animation2.js","./animation3.js":"animation3.js","./animation4.js":"animation4.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./engine/engine.js":"engine/engine.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1061,5 +747,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","example.js"], null)
-//# sourceMappingURL=/example.438d3af2.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","animation4.js"], null)
+//# sourceMappingURL=/animation4.d278a601.js.map

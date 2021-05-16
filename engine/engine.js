@@ -40,6 +40,8 @@ let scene = {
         };
         const handleColor = scene.handleColor;
 
+        let id = 0;
+
         //drawing functions
         //drawing rectangle
         scene.drawRect = (data) => {
@@ -59,6 +61,9 @@ let scene = {
                 this.color = handleColor(color);
                 this.customVars = customVars;
 
+                this.id = id;
+                id += 1;
+
                 this.draw = () => {
                     context.fillStyle = this.color;
                     context.fillRect(
@@ -75,6 +80,20 @@ let scene = {
                               this.draw();
                           }
                         : update;
+
+                this.delete = () => {
+                    let foundElement = false;
+                    let index = 0;
+                    scene.elements.forEach((element) => {
+                        if (element.id === this.id || foundElement === true) {
+                            foundElement = true;
+                        } else {
+                            index++;
+                        }
+                    });
+
+                    scene.elements.splice(index, 1);
+                };
             }
 
             scene.elements.push(
@@ -106,6 +125,9 @@ let scene = {
                 this.color = color;
                 this.customVars = customVars;
 
+                this.id = id;
+                id += 1;
+
                 this.draw = () => {
                     context.beginPath();
                     context.moveTo(startPos.x, startPos.y);
@@ -124,6 +146,20 @@ let scene = {
                               this.draw();
                           }
                         : update;
+
+                this.delete = () => {
+                    let foundElement = false;
+                    let index = 0;
+                    scene.elements.forEach((element) => {
+                        if (element.id === this.id || foundElement === true) {
+                            foundElement = true;
+                        } else {
+                            index++;
+                        }
+                    });
+
+                    scene.elements.splice(index, 1);
+                };
             }
 
             scene.elements.push(
@@ -170,6 +206,9 @@ let scene = {
                 this.fill = fill;
                 this.customVars = customVars;
 
+                this.id = id;
+                id += 1;
+
                 this.draw = () => {
                     context.beginPath();
                     context.arc(
@@ -196,6 +235,20 @@ let scene = {
                               this.draw();
                           }
                         : update;
+
+                this.delete = () => {
+                    let foundElement = false;
+                    let index = 0;
+                    scene.elements.forEach((element) => {
+                        if (element.id === this.id || foundElement === true) {
+                            foundElement = true;
+                        } else {
+                            index++;
+                        }
+                    });
+
+                    scene.elements.splice(index, 1);
+                };
             }
 
             scene.elements.push(
@@ -240,6 +293,9 @@ let scene = {
                 this.color = scene.handleColor(color);
                 this.customVars = customVars;
 
+                this.id = id;
+                id += 1;
+
                 this.draw = () => {
                     context.font = `${this.size} ${this.family}`;
                     context.fillStyle = this.color;
@@ -257,7 +313,19 @@ let scene = {
                           }
                         : update;
 
-                console.log(this);
+                this.delete = () => {
+                    let foundElement = false;
+                    let index = 0;
+                    scene.elements.forEach((element) => {
+                        if (element.id === this.id || foundElement === true) {
+                            foundElement = true;
+                        } else {
+                            index++;
+                        }
+                    });
+
+                    scene.elements.splice(index, 1);
+                };
             }
 
             scene.elements.push(
@@ -284,6 +352,25 @@ let scene = {
 
             scene.elements.forEach((element) => {
                 if (element.name === name) {
+                    foundElement = true;
+                } else if (foundElement === false) {
+                    i++;
+                }
+            });
+
+            if (foundElement === true) {
+                return scene.elements[i];
+            } else {
+                return null;
+            }
+        };
+
+        scene.getElementById = (id) => {
+            let foundElement = false;
+            let i = 0;
+
+            scene.elements.forEach((element) => {
+                if (element.id === id) {
                     foundElement = true;
                 } else if (foundElement === false) {
                     i++;

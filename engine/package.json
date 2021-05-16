@@ -3,6 +3,7 @@
     "version": "1.0.1",
     "description": "A simple <canvas> engine for pictures, animations, and games!",
     "main": "engine.js",
+    "homepage": "https://github.com/ItaiHammer/Tatsy-Engine",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
