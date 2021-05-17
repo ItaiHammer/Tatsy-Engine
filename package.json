@@ -6,8 +6,8 @@
     "type": "module",
     "scripts": {
         "start": "node .",
-        "dev": "parcel example.html",
-        "build": "parcel build example.html",
+        "dev": "parcel index.html",
+        "build": "parcel build index.html",
         "git-build": "rmdir /S docs && npm run build && rename dist docs && git add ."
     },
     "repository": {
