@@ -7,7 +7,7 @@
     "scripts": {
         "start": "node .",
         "dev": "parcel index.html",
-        "build": "parcel build index.html",
+        "build": "parcel build index.html --public-url ./",
         "git-build": "rmdir /S docs && npm run build && rename dist docs && git add ."
     },
     "repository": {
