@@ -18,12 +18,15 @@ export default function animation4() {
     };
 
     const colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92'];
-    const ballCount = { x: 5, y: scene.canvas.width / 25 };
+    const ballCount = {
+        x: scene.canvas.width / 25,
+        y: scene.canvas.height / 25,
+    };
 
     //drawing before timer starts
 
     //drawing one row
-    for (let i = 0; i < ballCount.y; i++) {
+    for (let i = 0; i < ballCount.x; i++) {
         const minRadius = 5;
         const maxRadius = 10;
 
@@ -105,7 +108,7 @@ export default function animation4() {
     //interval for drawing rows
     setInterval(() => {
         //drawing one row
-        for (let i = 0; i < ballCount.y; i++) {
+        for (let i = 0; i < ballCount.x; i++) {
             const minRadius = 5;
             const maxRadius = 10;
 

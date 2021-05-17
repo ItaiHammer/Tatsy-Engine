@@ -1,6 +1,6 @@
 {
     "name": "tasty-engine",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "A simple <canvas> engine for pictures, animations, and games!",
     "main": "engine.js",
     "homepage": "https://github.com/ItaiHammer/Tatsy-Engine",

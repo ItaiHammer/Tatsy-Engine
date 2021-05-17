@@ -693,8 +693,8 @@ function animation4() {
   };
   var colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92'];
   var ballCount = {
-    x: 5,
-    y: _engine.default.canvas.width / 25
+    x: _engine.default.canvas.width / 25,
+    y: _engine.default.canvas.height / 25
   }; //drawing before timer starts
   //drawing one row
 
@@ -728,7 +728,7 @@ function animation4() {
     });
   };
 
-  for (var i = 0; i < ballCount.y; i++) {
+  for (var i = 0; i < ballCount.x; i++) {
     _loop(i);
   } //drawing one column
 
@@ -800,7 +800,7 @@ function animation4() {
     };
 
     //drawing one row
-    for (var _i2 = 0; _i2 < ballCount.y; _i2++) {
+    for (var _i2 = 0; _i2 < ballCount.x; _i2++) {
       _loop3(_i2);
     } //drawing one column
 
@@ -842,6 +842,96 @@ function animation4() {
 
   _engine.default.startAnimation(60);
 }
+},{"./engine/engine.js":"engine/engine.js"}],"animation5.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = animation5;
+
+var _engine = _interopRequireDefault(require("./engine/engine.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function animation5() {
+  _engine.default.start({
+    sceneParent: document.body,
+    width: innerWidth,
+    height: innerHeight
+  });
+
+  window.addEventListener('mousemove', function (e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+  var mouse = {
+    x: -100,
+    y: 100
+  };
+  var colorArray = ['#d9d2ea', '#4c0490', '#36026a', '#6206b6', '#7b6b92'];
+  var ballCount = _engine.default.canvas.height / 120;
+
+  var _loop = function _loop(i) {
+    var ballOffset = 10;
+    var radius = 30;
+
+    _engine.default.drawArc({
+      position: {
+        x: _engine.default.canvas.width / 2,
+        y: i * radius * 4 + radius + ballOffset
+      },
+      radius: 30,
+      startAng: 0,
+      endAng: Math.PI * 2,
+      fill: colorArray[Math.floor(Math.random() * colorArray.length)],
+      customVars: {
+        velocity: _engine.default.canvas.width / 200,
+        bounceTimer: 0
+      },
+      update: function update(e) {
+        if (e.position.x + e.radius >= _engine.default.canvas.width) {
+          e.customVars.velocity = -e.customVars.velocity;
+          e.fill = colorArray[Math.floor(Math.random() * colorArray.length)];
+        } else if (e.position.x - e.radius <= 0) {
+          e.customVars.velocity = -e.customVars.velocity;
+          e.fill = colorArray[Math.floor(Math.random() * colorArray.length)];
+        } else if (_engine.default.math.getDistance(e.position.x, e.position.y, mouse.x, mouse.y) <= radius && e.customVars.bounceTimer === 0) {
+          e.customVars.bounceTimer = 144 / 3;
+          e.customVars.velocity = -e.customVars.velocity;
+          e.fill = colorArray[Math.floor(Math.random() * colorArray.length)];
+        }
+
+        if (e.customVars.bounceTimer > 0) e.customVars.bounceTimer--;
+        e.position.x += e.customVars.velocity;
+        e.draw();
+      }
+    });
+  };
+
+  for (var i = 0; i < ballCount; i++) {
+    _loop(i);
+  }
+
+  _engine.default.drawRect({
+    name: 'fadingEffect',
+    position: {
+      x: 0,
+      y: 0
+    },
+    size: {
+      x: _engine.default.canvas.width,
+      y: _engine.default.canvas.height
+    },
+    color: 'rgba(255,255,255, 0.05)'
+  });
+
+  _engine.default.startAnimation(144, function () {
+    _engine.default.elements.forEach(function (element) {
+      element.update(element);
+    });
+  }, false);
+}
 },{"./engine/engine.js":"engine/engine.js"}],"example.js":[function(require,module,exports) {
 "use strict";
 
@@ -853,11 +943,13 @@ var _animation3 = _interopRequireDefault(require("./animation3.js"));
 
 var _animation4 = _interopRequireDefault(require("./animation4.js"));
 
+var _animation5 = _interopRequireDefault(require("./animation5.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var animations = [_animation.default, _animation2.default, _animation3.default, _animation4.default];
+var animations = [_animation.default, _animation2.default, _animation3.default, _animation4.default, _animation5.default];
 window.onload = animations[Math.floor(Math.random() * animations.length)];
-},{"./animation1.js":"animation1.js","./animation2.js":"animation2.js","./animation3.js":"animation3.js","./animation4.js":"animation4.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./animation1.js":"animation1.js","./animation2.js":"animation2.js","./animation3.js":"animation3.js","./animation4.js":"animation4.js","./animation5.js":"animation5.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -885,7 +977,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59809" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52552" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
