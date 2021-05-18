@@ -117,7 +117,31 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"engine/engine.js":[function(require,module,exports) {
+})({"animationCount.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = animationCount;
+
+function animationCount(animationAmount) {
+  var shownAnimationArray = localStorage.getItem('animations').split('&');
+  var text = "".concat(typeof shownAnimationArray === 'string' ? 1 : shownAnimationArray.length, "/").concat(animationAmount);
+  var animationCount = document.querySelector('#animation-count');
+  var animationCountText = document.querySelectorAll('#animation-count-text');
+  animationCount.innerHTML = text;
+  animationCountText.forEach(function (element) {
+    return element.style.opacity = 1;
+  });
+
+  if (typeof shownAnimationArray === 'string' ? 1 : shownAnimationArray.length === animationAmount) {
+    animationCount.style.color = '#CBBC93';
+  }
+
+  console.log(localStorage.getItem('animations').split('&'));
+}
+},{}],"engine/engine.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -449,6 +473,21 @@ var _engine = _interopRequireDefault(require("./engine/engine.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function animation1() {
+  var animationNum = 1;
+  console.log("Animation ".concat(animationNum));
+  var hasAnimaitonBeenSeen = false;
+  localStorage.getItem('animations').split('&').forEach(function (animation) {
+    if (animation === "".concat(animationNum)) {
+      hasAnimaitonBeenSeen = true;
+    }
+  });
+
+  if (localStorage.getItem('animations') == null || localStorage.getItem('animations') === '') {
+    localStorage.setItem('animations', animationNum);
+  } else if (!hasAnimaitonBeenSeen) {
+    localStorage.setItem('animations', "".concat(localStorage.getItem('animations'), "&").concat(animationNum));
+  }
+
   _engine.default.start({
     sceneParent: document.body,
     width: innerWidth,
@@ -531,6 +570,21 @@ var _engine = _interopRequireDefault(require("./engine/engine.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function animation2() {
+  var animationNum = 2;
+  console.log("Animation ".concat(animationNum));
+  var hasAnimaitonBeenSeen = false;
+  localStorage.getItem('animations').split('&').forEach(function (animation) {
+    if (animation === "".concat(animationNum)) {
+      hasAnimaitonBeenSeen = true;
+    }
+  });
+
+  if (localStorage.getItem('animations') == null || localStorage.getItem('animations') === '') {
+    localStorage.setItem('animations', animationNum);
+  } else if (!hasAnimaitonBeenSeen) {
+    localStorage.setItem('animations', "".concat(localStorage.getItem('animations'), "&").concat(animationNum));
+  }
+
   _engine.default.start({
     sceneParent: document.body,
     width: innerWidth,
@@ -596,6 +650,21 @@ var _engine = _interopRequireDefault(require("./engine/engine.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function animation3() {
+  var animationNum = 3;
+  console.log("Animation ".concat(animationNum));
+  var hasAnimaitonBeenSeen = false;
+  localStorage.getItem('animations').split('&').forEach(function (animation) {
+    if (animation === "".concat(animationNum)) {
+      hasAnimaitonBeenSeen = true;
+    }
+  });
+
+  if (localStorage.getItem('animations') == null || localStorage.getItem('animations') === '') {
+    localStorage.setItem('animations', animationNum);
+  } else if (!hasAnimaitonBeenSeen) {
+    localStorage.setItem('animations', "".concat(localStorage.getItem('animations'), "&").concat(animationNum));
+  }
+
   _engine.default.start({
     sceneParent: document.body,
     width: innerWidth,
@@ -677,6 +746,21 @@ var _engine = _interopRequireDefault(require("./engine/engine.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function animation4() {
+  var animationNum = 4;
+  console.log("Animation ".concat(animationNum));
+  var hasAnimaitonBeenSeen = false;
+  localStorage.getItem('animations').split('&').forEach(function (animation) {
+    if (animation === "".concat(animationNum)) {
+      hasAnimaitonBeenSeen = true;
+    }
+  });
+
+  if (localStorage.getItem('animations') == null || localStorage.getItem('animations') === '') {
+    localStorage.setItem('animations', animationNum);
+  } else if (!hasAnimaitonBeenSeen) {
+    localStorage.setItem('animations', "".concat(localStorage.getItem('animations'), "&").concat(animationNum));
+  }
+
   _engine.default.start({
     sceneParent: document.body,
     width: innerWidth,
@@ -855,6 +939,21 @@ var _engine = _interopRequireDefault(require("./engine/engine.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function animation5() {
+  var animationNum = 5;
+  console.log("Animation ".concat(animationNum));
+  var hasAnimaitonBeenSeen = false;
+  localStorage.getItem('animations').split('&').forEach(function (animation) {
+    if (animation === "".concat(animationNum)) {
+      hasAnimaitonBeenSeen = true;
+    }
+  });
+
+  if (localStorage.getItem('animations') == null || localStorage.getItem('animations') === '') {
+    localStorage.setItem('animations', animationNum);
+  } else if (!hasAnimaitonBeenSeen) {
+    localStorage.setItem('animations', "".concat(localStorage.getItem('animations'), "&").concat(animationNum));
+  }
+
   _engine.default.start({
     sceneParent: document.body,
     width: innerWidth,
@@ -935,6 +1034,8 @@ function animation5() {
 },{"./engine/engine.js":"engine/engine.js"}],"examples.js":[function(require,module,exports) {
 "use strict";
 
+var _animationCount = _interopRequireDefault(require("./animationCount.js"));
+
 var _animation = _interopRequireDefault(require("./animation1.js"));
 
 var _animation2 = _interopRequireDefault(require("./animation2.js"));
@@ -948,8 +1049,19 @@ var _animation5 = _interopRequireDefault(require("./animation5.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var animations = [_animation.default, _animation2.default, _animation3.default, _animation4.default, _animation5.default];
-window.onload = animations[Math.floor(Math.random() * animations.length)];
-},{"./animation1.js":"animation1.js","./animation2.js":"animation2.js","./animation3.js":"animation3.js","./animation4.js":"animation4.js","./animation5.js":"animation5.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var animation = Math.floor(Math.random() * animations.length);
+
+function onLoad() {
+  if (localStorage.getItem('animations') == null) {
+    localStorage.setItem('animations', '');
+  }
+
+  animations[animation]();
+  (0, _animationCount.default)(animations.length);
+}
+
+window.onload = onLoad;
+},{"./animationCount.js":"animationCount.js","./animation1.js":"animation1.js","./animation2.js":"animation2.js","./animation3.js":"animation3.js","./animation4.js":"animation4.js","./animation5.js":"animation5.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -977,7 +1089,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50207" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64232" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

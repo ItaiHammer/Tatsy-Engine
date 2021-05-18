@@ -1,6 +1,29 @@
 import scene from './engine/engine.js';
 
 export default function animation2() {
+    const animationNum = 2;
+    console.log(`Animation ${animationNum}`);
+    let hasAnimaitonBeenSeen = false;
+    localStorage
+        .getItem('animations')
+        .split('&')
+        .forEach((animation) => {
+            if (animation === `${animationNum}`) {
+                hasAnimaitonBeenSeen = true;
+            }
+        });
+    if (
+        localStorage.getItem('animations') == null ||
+        localStorage.getItem('animations') === ''
+    ) {
+        localStorage.setItem('animations', animationNum);
+    } else if (!hasAnimaitonBeenSeen) {
+        localStorage.setItem(
+            'animations',
+            `${localStorage.getItem('animations')}&${animationNum}`
+        );
+    }
+
     scene.start({
         sceneParent: document.body,
         width: innerWidth,
